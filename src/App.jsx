@@ -1,18 +1,22 @@
-import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // Importa el AuthProvider
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute'; // ✅ Importa ProtectedRoute
 
-// Lazy imports para todos los componentes
-const Navbar = lazy(() => import('./components/Navbar'));
+// Componentes críticos - cargar inmediatamente (no lazy)
+import Navbar from './components/Navbar';
+import Carousel from './components/Carousel/Carousel';
+
+// Lazy imports para componentes secundarios
 const Footer = lazy(() => import('./components/Footer'));
 const AboutUs = lazy(() => import('./components/AboutUs'));
 const Agreements = lazy(() => import('./components/Agreements'));
 const RedirectToHomeButton = lazy(() => import('./components/RedirectToHomeButton'));
-const Carousel = lazy(() => import('./components/Carousel'));
+const ServicesGrid = lazy(() => import('./components/ServicesGrid'));
+const MembershipBenefits = lazy(() => import('./components/MembershipBenefits'));
 const UpcomingActivities = lazy(() => import('./components/UpcomingActivities'));
 const PreviousActivities = lazy(() => import('./components/PreviousActivities'));
 const Suscription = lazy(() => import('./components/Suscription'));
@@ -38,9 +42,18 @@ const MainDashboard = lazy(() => import('./components/MainDashboard'));
 const GestorDashboard = lazy(() => import('./components/GestorDashboard'));
 const StepByStepGuide = lazy(() => import('./components/StepByStepGuide'));
 
+// Componente de loading optimizado - más ligero
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen bg-white">
+    <div className="text-center">
+      <div className="inline-block w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  </div>
+);
+
 // Componente de envoltura para páginas que no son el Home, incluye el botón
 const PageLayout = ({ children }) => (
-  <Suspense fallback={<div className="text-center py-10">Cargando...</div>}>
+  <Suspense fallback={<LoadingFallback />}>
     <main className="flex flex-col min-h-screen container mx-auto px-4 py-10">
       <div className="flex justify-start mb-6">
         <RedirectToHomeButton />
@@ -54,16 +67,82 @@ PageLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+// Componente para manejar scroll al hash
+const ScrollToHash = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.getElementById(location.hash.substring(1));
+      if (element) {
+        setTimeout(() => {
+          const offset = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
+    }
+  }, [location]);
+
+  return null;
+};
+
 const HomeLayout = () => (
-  <Suspense fallback={<div className="text-center py-10">Cargando...</div>}>
+  <>
+    <ScrollToHash />
+    {/* Componentes críticos - cargan inmediatamente */}
     <Navbar />
-    <Carousel />
-    <div className="container mx-auto px-4 py-10">
-      <SearchPage />
-    </div>
-    <Agreements />
-    <Footer />
-  </Suspense>
+    <section id="inicio">
+      <Carousel />
+    </section>
+    
+    {/* Componentes secundarios - carga progresiva */}
+    <section id="servicios">
+      <Suspense fallback={<div className="py-16"><div className="text-center"><div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div></div>}>
+        <ServicesGrid />
+      </Suspense>
+    </section>
+    
+    <section id="beneficios">
+      <Suspense fallback={<div className="py-16"><div className="text-center"><div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div></div>}>
+        <MembershipBenefits />
+      </Suspense>
+    </section>
+    
+    <section id="busqueda">
+      <Suspense fallback={<div className="py-16"><div className="text-center"><div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div></div>}>
+        <div className="container mx-auto px-4 py-10">
+          <SearchPage />
+        </div>
+      </Suspense>
+    </section>
+    
+    <section id="nosotros">
+      <Suspense fallback={null}>
+        <AboutUs />
+      </Suspense>
+    </section>
+    
+    <section id="actividades">
+      <Suspense fallback={null}>
+        <div className="container mx-auto px-4 py-10">
+          <UpcomingActivities />
+        </div>
+      </Suspense>
+    </section>
+    
+    <Suspense fallback={null}>
+      <Agreements />
+    </Suspense>
+    
+    <Suspense fallback={null}>
+      <Footer />
+    </Suspense>
+  </>
 );
 
 // ✅ ProtectedPageLayout DEFINIDO en App.jsx (NO en archivo separado)

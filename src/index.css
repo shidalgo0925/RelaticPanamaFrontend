@@ -3,6 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Scroll suave global */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Offset para secciones con navbar fijo */
+section[id] {
+  scroll-margin-top: 4rem;
+}
+
 @layer utilities {
   @keyframes fadeInUp {
     0% {

@@ -41,6 +41,31 @@ const Navbar = () => {
     setActiveDropdown(activeDropdown === dropdown ? null : dropdown);
   };
 
+  // Función para scroll suave a secciones
+  const scrollToSection = (sectionId, e) => {
+    e?.preventDefault();
+    
+    // Si no estamos en la página principal, redirigir primero
+    if (window.location.pathname !== '/') {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const offset = 80; // Altura del navbar
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsOpen(false); // Cerrar menú móvil
+    setActiveDropdown(null); // Cerrar dropdowns
+  };
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
@@ -89,21 +114,21 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo con diseño institucional limpio */}
           <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-shrink">
-            <a href="/" className="min-w-0 block flex items-center space-x-2 sm:space-x-3">
+            <a href="#inicio" onClick={(e) => scrollToSection('inicio', e)} className="min-w-0 block flex items-center space-x-2 sm:space-x-3 cursor-pointer">
               <div className="relative flex-shrink-0">
-                <div className={`w-8 h-8 sm:w-10 sm:h-10 ${
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 ${
                   isScrolled 
                     ? 'bg-blue-600' 
                     : 'bg-slate-700'
                 } rounded-lg flex items-center justify-center transition-colors duration-500`}>
-                  <Globe className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+                  <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <div className={`absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 ${
+                <div className={`absolute -top-1 -right-1 w-3 h-3 sm:w-3.5 sm:h-3.5 ${
                   isScrolled ? 'bg-orange-400' : 'bg-blue-300'
                 } rounded-full transition-colors duration-500`} />
               </div>
-              <div>
-                <h1 className={`text-base sm:text-lg lg:text-xl font-bold transition-colors duration-500 ${textColor}`}>
+              <div className="hidden sm:block">
+                <h1 className={`text-sm sm:text-base lg:text-xl font-bold transition-colors duration-500 ${textColor}`}>
                   RELATIC PANAMÁ
                 </h1>
                 <span className={`text-xs sm:text-xs lg:text-xs tracking-wider leading-tight block transition-colors duration-500 ${
@@ -118,8 +143,10 @@ const Navbar = () => {
           {/* Desktop Navigation - Diseño limpio y profesional */}
           <div className="hidden xl:flex items-center space-x-3 2xl:space-x-5">
             <a 
-              href="/" 
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-medium relative group text-sm 2xl:text-base`}
+              href="#inicio" 
+              onClick={(e) => scrollToSection('inicio', e)}
+              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
             >
               Inicio
               <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
@@ -130,9 +157,15 @@ const Navbar = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDropdown('services');
+                  // Si está en la página principal, hacer scroll, sino mostrar dropdown
+                  if (window.location.pathname === '/') {
+                    scrollToSection('servicios', e);
+                  } else {
+                    handleDropdown('services');
+                  }
                 }}
-                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-medium relative group text-sm 2xl:text-base`}
+                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+                style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
               >
                 <span>Servicios</span>
                 <ChevronDown className={`w-3 h-3 2xl:w-4 2xl:h-4 transition-transform duration-300 ${
@@ -173,8 +206,14 @@ const Navbar = () => {
             </div>
 
             <a 
-              href="/nosotros" 
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-medium relative group text-sm 2xl:text-base`}
+              href="#nosotros" 
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  scrollToSection('nosotros', e);
+                }
+              }}
+              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
             >
               Nosotros
               <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
@@ -185,9 +224,15 @@ const Navbar = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDropdown('activities');
+                  // Si está en la página principal, hacer scroll, sino mostrar dropdown
+                  if (window.location.pathname === '/') {
+                    scrollToSection('actividades', e);
+                  } else {
+                    handleDropdown('activities');
+                  }
                 }}
-                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-medium relative group text-sm 2xl:text-base`}
+                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+                style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
               >
                 <span>Actividades</span>
                 <ChevronDown className={`w-3 h-3 2xl:w-4 2xl:h-4 transition-transform duration-300 ${
@@ -229,58 +274,45 @@ const Navbar = () => {
 
             <a 
               href="https://relaticpanama.org/_blog/" 
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-medium relative group text-sm 2xl:text-base`}
+              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base`}
+              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
             >
               Blog
               <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
             </a>
 
-            {/* Nuevo elemento "Administración" */}
-            <a 
-              href="/panel-administracion" 
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-medium relative group text-sm 2xl:text-base flex items-center space-x-1`}
+            {/* Botón de Administración con icono de engranaje */}
+            <a
+              href="/panel-administracion"
+              className={`p-2 ${textColor} ${hoverTextColor} transition-all duration-300 rounded-lg hover:bg-slate-100/50`}
+              title="Administración"
             >
-              <Settings className="w-3 h-3 2xl:w-4 2xl:h-4" />
-              <span>Administración</span>
-              <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
+              <Settings className="w-5 h-5" />
             </a>
 
-            {/* Botón de Afiliación con efecto de borde y color azul claro */}
+            {/* Botón de Registrarse */}
             <a
-              href="/suscription"
-              className={`relative px-3 py-1.5 xl:px-4 xl:py-2 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex-shrink-0 ${
-                isScrolled 
-                  ? 'border-sky-500 text-sky-600 hover:bg-sky-500 hover:text-white' 
-                  : 'border-sky-400 text-sky-300 hover:bg-sky-400 hover:text-slate-800'
-              }`}
+              href="http://localhost:9000/register"
+              className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold transition-colors duration-300"
             >
-              <span className="relative z-10 flex items-center space-x-1.5">
-                <Rocket className="w-3 h-3 xl:w-4 xl:h-4" />
-                <span className="text-sm xl:text-base">¡AFÍLIATE YA!</span>
-              </span>
+              Registrarse
             </a>
 
-            {/* Botón de Registro */}
+            {/* Botón de Iniciar Sesión */}
             <a
-              href="/registro-usuario"
-              className={`relative px-3 py-1.5 xl:px-4 xl:py-2 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex-shrink-0 ${
-                isScrolled 
-                  ? 'border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white' 
-                  : 'border-emerald-400 text-emerald-300 hover:bg-emerald-400 hover:text-slate-800'
-              }`}
+              href="http://localhost:9000/login"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-300"
             >
-              <span className="relative z-10 flex items-center space-x-1.5">
-                <UserPlus className="w-3 h-3 xl:w-4 xl:h-4" />
-                <span className="text-sm xl:text-base">Registrarse</span>
-              </span>
+              Iniciar Sesión
             </a>
           </div>
 
           {/* Tablet Navigation (lg to xl) */}
           <div className="hidden lg:flex xl:hidden items-center space-x-2">
             <a 
-              href="/" 
-              className={`${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm`}
+              href="#inicio" 
+              onClick={(e) => scrollToSection('inicio', e)}
+              className={`${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm cursor-pointer`}
             >
               Inicio
             </a>
@@ -289,9 +321,13 @@ const Navbar = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDropdown('services');
+                  if (window.location.pathname === '/') {
+                    scrollToSection('servicios', e);
+                  } else {
+                    handleDropdown('services');
+                  }
                 }}
-                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm`}
+                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm cursor-pointer`}
               >
                 <span>Servicios</span>
                 <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${
@@ -325,7 +361,15 @@ const Navbar = () => {
               )}
             </div>
 
-            <a href="/nosotros" className={`${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm`}>
+            <a 
+              href="#nosotros" 
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  scrollToSection('nosotros', e);
+                }
+              }}
+              className={`${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm cursor-pointer`}
+            >
               Nosotros
             </a>
 
@@ -333,9 +377,13 @@ const Navbar = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDropdown('activities');
+                  if (window.location.pathname === '/') {
+                    scrollToSection('actividades', e);
+                  } else {
+                    handleDropdown('activities');
+                  }
                 }}
-                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm`}
+                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm cursor-pointer`}
               >
                 <span>Actividades</span>
                 <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${
@@ -373,43 +421,29 @@ const Navbar = () => {
               Blog
             </a>
             
-            {/* Administración para Tablet */}
-            <a 
-              href="/panel-administracion" 
-              className={`${textColor} ${hoverTextColor} transition-colors duration-300 font-medium text-sm flex items-center space-x-1`}
+            {/* Botón de Administración con icono de engranaje para Tablet */}
+            <a
+              href="/panel-administracion"
+              className={`p-2 ${textColor} ${hoverTextColor} transition-all duration-300 rounded-lg hover:bg-slate-100/50`}
+              title="Administración"
             >
-              <Settings className="w-3 h-3" />
-              <span>Admin</span>
+              <Settings className="w-5 h-5" />
             </a>
 
-            {/* Botón de Afiliación para Tablet */}
+            {/* Botón de Registrarse para Tablet */}
             <a
-              href="/suscription"
-              className={`relative px-3 py-1.5 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex-shrink-0 ${
-                isScrolled 
-                  ? 'border-sky-500 text-sky-600 hover:bg-sky-500 hover:text-white' 
-                  : 'border-sky-400 text-sky-300 hover:bg-sky-400 hover:text-slate-800'
-              }`}
+              href="http://localhost:9000/register"
+              className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold transition-colors duration-300"
             >
-              <span className="relative z-10 flex items-center space-x-1.5">
-                <Rocket className="w-3 h-3" />
-                <span className="text-sm">¡AFÍLIATE YA!</span>
-              </span>
+              Registrarse
             </a>
 
-            {/* Botón de Registro para Tablet */}
+            {/* Botón de Iniciar Sesión para Tablet */}
             <a
-              href="/registro-usuario"
-              className={`relative px-3 py-1.5 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex-shrink-0 ${
-                isScrolled 
-                  ? 'border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white' 
-                  : 'border-emerald-400 text-emerald-300 hover:bg-emerald-400 hover:text-slate-800'
-              }`}
+              href="http://localhost:9000/login"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-300"
             >
-              <span className="relative z-10 flex items-center space-x-1.5">
-                <UserPlus className="w-3 h-3" />
-                <span className="text-sm">Registrarse</span>
-              </span>
+              Iniciar Sesión
             </a>
           </div>
 
@@ -436,9 +470,12 @@ const Navbar = () => {
           }`}>
             <div className="p-3 sm:p-4 space-y-2">
               <a 
-                href="/" 
-                className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
-                onClick={() => setIsOpen(false)}
+                href="#inicio" 
+                onClick={(e) => {
+                  scrollToSection('inicio', e);
+                  setIsOpen(false);
+                }}
+                className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base cursor-pointer`}
               >
                 Inicio
               </a>
@@ -469,9 +506,14 @@ const Navbar = () => {
               </div>
 
               <a 
-                href="/nosotros" 
-                className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
-                onClick={() => setIsOpen(false)}
+                href="#nosotros" 
+                onClick={(e) => {
+                  if (window.location.pathname === '/') {
+                    scrollToSection('nosotros', e);
+                  }
+                  setIsOpen(false);
+                }}
+                className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base cursor-pointer`}
               >
                 Nosotros
               </a>
@@ -509,44 +551,32 @@ const Navbar = () => {
                 Blog
               </a>
 
-              {/* Administración Móvil */}
-              <a 
-                href="/panel-administracion" 
-                className={`flex items-center space-x-3 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
+              {/* Botón de Administración con icono de engranaje Móvil */}
+              <a
+                href="/panel-administracion"
+                className={`flex items-center justify-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
                 onClick={() => setIsOpen(false)}
               >
-                <Settings className={`w-4 h-4 ${
-                  isScrolled ? 'text-blue-600' : 'text-blue-200'
-                } flex-shrink-0`} />
+                <Settings className="w-4 h-4" />
                 <span>Administración</span>
               </a>
 
-              {/* Botón de Afiliación Móvil */}
+              {/* Botón de Registrarse Móvil */}
               <a
-                href="/suscription"
-                className={`flex items-center justify-center space-x-2 w-full px-4 py-2 sm:px-6 sm:py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-sm sm:text-base ${
-                  isScrolled 
-                    ? 'border-sky-500 text-sky-600 hover:bg-sky-500 hover:text-white' 
-                    : 'border-sky-400 text-sky-300 hover:bg-sky-400 hover:text-slate-800'
-                }`}
+                href="http://localhost:9000/register"
+                className="block w-full px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold text-center transition-colors duration-300"
                 onClick={() => setIsOpen(false)}
               >
-                <Rocket className="w-4 h-4" />
-                <span>¡AFÍLIATE YA!</span>
+                Registrarse
               </a>
 
-              {/* Botón de Registro Móvil */}
+              {/* Botón de Iniciar Sesión Móvil */}
               <a
-                href="/registro-usuario"
-                className={`flex items-center justify-center space-x-2 w-full px-4 py-2 sm:px-6 sm:py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-sm sm:text-base ${
-                  isScrolled 
-                    ? 'border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white' 
-                    : 'border-emerald-400 text-emerald-300 hover:bg-emerald-400 hover:text-slate-800'
-                }`}
+                href="http://localhost:9000/login"
+                className="block w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-center transition-colors duration-300"
                 onClick={() => setIsOpen(false)}
               >
-                <UserPlus className="w-4 h-4" />
-                <span>Registrarse</span>
+                Iniciar Sesión
               </a>
             </div>
           </div>

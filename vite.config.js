@@ -15,6 +15,16 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
+    port: 5173,
+    warmup: {
+      clientFiles: [
+        './src/main.jsx', 
+        './src/App.jsx',
+        './src/components/Navbar.jsx',
+        './src/components/Carousel/Carousel.jsx'
+      ],
+    },
     proxy: {
       '/_events/api': {
         target: 'https://relaticpanama.org',
@@ -24,6 +34,13 @@ export default defineConfig({
     },
   },
   build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -36,6 +53,9 @@ export default defineConfig({
           }
           if (id.includes('node_modules/chart.js')) {
             return 'vendor_charts';
+          }
+          if (id.includes('node_modules/react-router')) {
+            return 'vendor_router';
           }
 
           // Componentes grandes separados
@@ -54,8 +74,27 @@ export default defineConfig({
           if (id.includes('components/Footer')) return 'Footer';
           if (id.includes('components/Agreements')) return 'Agreements';
         },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    chunkSizeWarningLimit: 800, // aumenta límite para advertencias, opcional
+    chunkSizeWarningLimit: 1000,
+    assetsInlineLimit: 4096,
+    sourcemap: false,
+    cssCodeSplit: true,
+    cssMinify: true,
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react'],
+    exclude: ['@phosphor-icons/react'],
+    esbuildOptions: {
+      target: 'es2020',
+    },
+  },
+  esbuild: {
+    target: 'es2020',
+    legalComments: 'none',
   },
 });
+
