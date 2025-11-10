@@ -44,10 +44,10 @@ const ServicesGrid = () => {
     },
     {
       id: 6,
-      title: "Formateo Rápido",
-      description: "¿Quieres darle formato de forma rápida a tu manuscrito?",
+      title: "HERRAMIENTAS DE APOYO PARA INVESTIGACIÓN",
+      description: "Apoyo en investigación y redacción científica",
       icon: PenTool,
-      href: "/guia-paso-a-paso",
+      href: "/detalles-formateo-rapido",
       featured: true
     }
   ];
@@ -90,22 +90,13 @@ const ServicesGrid = () => {
                     {service.description}
                   </p>
                   
-                  {service.featured ? (
-                    <a
-                      href={service.href}
-                      className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg text-center transition-colors duration-300"
-                    >
-                      Comenzar ahora →
-                    </a>
-                  ) : (
-                    <a
-                      href={service.href}
-                      className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center group"
-                    >
-                      Ver más
-                      <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
-                  )}
+                  <a
+                    href={service.href}
+                    className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center group"
+                  >
+                    Ver más
+                    <span className="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+                  </a>
                 </div>
               </div>
             );

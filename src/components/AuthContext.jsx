@@ -1,15 +1,26 @@
 import { createContext, useContext, useState, useMemo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Contexto de autenticación para gestionar el estado del usuario en toda la aplicación.
+ * Proporciona funciones de login, logout y estado de autenticación.
+ */
 const AuthContext = createContext(null);
 
+/**
+ * Proveedor de autenticación que envuelve la aplicación y gestiona el estado del usuario.
+ * 
+ * @param {Object} props - Propiedades del componente
+ * @param {React.ReactNode} props.children - Componentes hijos que tendrán acceso al contexto
+ * @returns {React.ReactElement} Provider con el contexto de autenticación
+ */
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
-    } catch (e) {
-      console.error("No se pudo parsear el usuario del localStorage", e);
+    } catch {
+      // Si hay error al parsear, retornar null (usuario no autenticado)
       return null;
     }
   });
@@ -21,8 +32,9 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     try {
       localStorage.setItem('user', JSON.stringify(userData));
-    } catch (e) {
-      console.error("No se pudo guardar el usuario en el localStorage", e);
+    } catch {
+      // Si hay error al guardar, continuar (el usuario se mantiene en memoria)
+      // En producción, considerar logging a un servicio externo
     }
   }, []);
 
@@ -45,6 +57,13 @@ AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+/**
+ * Hook personalizado para acceder al contexto de autenticación.
+ * Debe ser usado dentro de un componente envuelto por AuthProvider.
+ * 
+ * @returns {Object} Objeto con { user, isAuthenticated, login, logout }
+ * @throws {Error} Si se usa fuera de AuthProvider
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

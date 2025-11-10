@@ -1,189 +1,79 @@
-import { useEffect } from 'react';
-import { FileText, Star, Users, BookOpen, Award, Mail, DollarSign, Eye, Palette, Globe } from 'lucide-react';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import { CheckCircle } from 'lucide-react';
+import { renderStyledTitle } from './Carousel/carouselUtils.jsx';
 
 export default function PostersDetails() {
-  useEffect(() => {
-    AOS.init({ duration: 800 });
-  }, []);
+  // Datos de la slide de Carteles Digitales
+  const slide = {
+    id: 1,
+    title: "Carteles Digitales",
+    subtitle: "Presenta tus trabajos en formato póster",
+    description: "Expón y comparte tus investigaciones a través de carteles digitales accesibles y visuales que facilitan la comunicación científica.",
+    bgImage: "https://media.istockphoto.com/id/1177502660/es/foto/joven-leyendo-las-noticias-en-una-tableta-moderna-mientras-se-sienta-en-su-sala-de-estar.webp?a=1&b=1&s=612x612&w=0&k=20&c=gWUU0e1SHmdTKO0vyaowOk7x2QIi4eiTdreoSSk_8hg=",
+    bullets: ["Formato visual y atractivo", "Difusión rápida de resultados", "Interacción y retroalimentación"]
+  };
 
   return (
-    <div
-      className="w-full px-6 py-16 md:py-24 bg-slate-800 text-white rounded-lg"
-      data-aos="zoom-in"
-    >
-      <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-8">
-            <div className="bg-blue-600 p-4 rounded-lg">
-              <FileText size={56} className="text-white" />
-            </div>
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Carteles Digitales
+    <div className="relative w-full h-[68.75vh] overflow-hidden">
+      {/* Imagen de fondo */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${slide.bgImage})` }}
+      />
+      
+      {/* Overlay oscuro para legibilidad (igual que el carrusel) */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/70 to-slate-900/80" />
+      
+      {/* Elementos decorativos geométricos sutiles (igual que el carrusel) */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-32 h-32 border-2 border-white transform rotate-45" />
+        <div className="absolute top-20 right-20 w-24 h-24 border border-white rounded-full" />
+        <div className="absolute bottom-20 left-20 w-16 h-16 bg-white transform rotate-12" />
+        <div className="absolute bottom-10 right-10 w-20 h-20 border-2 border-white transform -rotate-45" />
+      </div>
+
+      {/* Contenido - igual que el carrusel */}
+      <div className="relative z-20 h-full flex items-center justify-center px-8 pt-16">
+        <div className="text-center max-w-4xl">
+          {/* Título principal */}
+          <h1 
+            className="text-4xl md:text-5xl font-bold mb-4 text-white"
+            style={{ fontFamily: 'Inter, sans-serif' }}
+          >
+            {renderStyledTitle(slide.title)}
+          </h1>
+
+          {/* Subtítulo */}
+          <h2 
+            className="text-xl md:text-2xl font-normal mb-6 text-yellow-300"
+            style={{ 
+              fontFamily: 'Inter, sans-serif',
+              textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.6)',
+              fontWeight: '600'
+            }}
+          >
+            {slide.subtitle}
           </h2>
-          
-          <p className="text-2xl md:text-3xl mb-6 font-light text-slate-300">
-            Presenta tus trabajos en formato digital
+
+          {/* Descripción */}
+          <p 
+            className="text-lg md:text-xl text-yellow-300 max-w-2xl mx-auto leading-relaxed mb-6"
+            style={{
+              textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 0, 0, 0.6)',
+              fontWeight: '500'
+            }}
+          >
+            {slide.description}
           </p>
-          
-          <div className="max-w-3xl mx-auto">
-            <p className="text-xl md:text-2xl leading-relaxed text-slate-300 font-light">
-              Expón y comparte tus investigaciones a través de carteles digitales accesibles y visuales.
-            </p>
-          </div>
-        </div>
 
-        {/* Key Features Grid */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16" data-aos="fade-up" data-aos-delay="200">
-          <div className="bg-white p-6 rounded-lg text-center border border-slate-200 hover:bg-slate-50 transition-all duration-300">
-            <Palette size={40} className="text-blue-600 mx-auto mb-4" />
-            <h4 className="text-xl font-semibold mb-2 text-slate-700">Diseño Atractivo</h4>
-            <p className="text-slate-500">Moderno y visualmente impactante</p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg text-center border border-slate-200 hover:bg-slate-50 transition-all duration-300">
-            <Eye size={40} className="text-blue-600 mx-auto mb-4" />
-            <h4 className="text-xl font-semibold mb-2 text-slate-700">Fácil Visualización</h4>
-            <p className="text-slate-500">Accesible en línea desde cualquier dispositivo</p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg text-center border border-slate-200 hover:bg-slate-50 transition-all duration-300">
-            <Globe size={40} className="text-blue-600 mx-auto mb-4" />
-            <h4 className="text-xl font-semibold mb-2 text-slate-700">Difusión Académica</h4>
-            <p className="text-slate-500">Exposición en eventos científicos</p>
-          </div>
-        </div>
-
-        {/* Membership Benefits Section */}
-        <div
-          className="bg-white p-8 md:p-10 rounded-lg border border-slate-200"
-          data-aos="fade-up"
-          data-aos-delay="400"
-        >
-          <div className="text-center mb-10">
-            <h3 className="text-3xl md:text-4xl font-bold text-slate-700 mb-4">
-              Múltiples beneficios de membresía
-            </h3>
-            <p className="text-xl text-slate-500 font-medium">con RELATIC PANAMÁ</p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-5">
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <Award size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Carné de miembro</p>
-                  <p className="text-slate-500 text-sm">Identificación oficial</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <Users size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Apoyo para perfil científico</p>
-                  <p className="text-slate-500 text-sm">En redes sociales</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <Star size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Descuentos en eventos</p>
-                  <p className="text-slate-500 text-sm">Todas las actividades</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <BookOpen size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Asesorías especializadas</p>
-                  <p className="text-slate-500 text-sm">Investigaciones y publicaciones</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-5">
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <Award size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Certificados académicos</p>
-                  <p className="text-slate-500 text-sm">En actividades educativas</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <FileText size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Facilidades de publicación</p>
-                  <p className="text-slate-500 text-sm">En portales aliados</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <Mail size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Cartas de referencia</p>
-                  <p className="text-slate-500 text-sm">Academia y profesionales</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg border border-slate-200 hover:bg-white transition-all duration-300">
-                <div className="bg-blue-600 p-2 rounded-md">
-                  <DollarSign size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-slate-700">Incentivos económicos</p>
-                  <p className="text-slate-500 text-sm">Por organizar actividades</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Call to Action Buttons */}
-        <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-8" data-aos="fade-up" data-aos-delay="600">
-          <a
-            href="https://relaticpanama.org/_posters/"
-            rel="noopener noreferrer"
-            className="group px-10 py-4 rounded-lg font-semibold text-white text-xl transform hover:scale-105 transition-all duration-300
-             bg-blue-600 hover:bg-blue-700 border border-slate-200"
-          >
-            <span className="flex items-center space-x-3">
-              <FileText size={24} />
-              <span>Ir al portal de carteles</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-            </span>
-          </a>
-          
-          <a
-            href="/suscription"
-            rel="noopener noreferrer"
-            className="group px-10 py-4 rounded-lg font-semibold text-white text-xl transform hover:scale-105 transition-all duration-300
-             bg-blue-600 hover:bg-blue-700 border border-slate-200"
-          >
-            <span className="flex items-center space-x-3">
-              <span className="text-2xl">🎓</span>
-              <span>¡AFÍLIATE YA!</span>
-            </span>
-          </a>
+          {/* Lista de características */}
+          <ul className="mt-4 space-y-2 text-left text-base md:text-lg max-w-xl mx-auto text-white/85">
+            {slide.bullets.map((item, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <CheckCircle size={18} className="text-white/90" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import {
   useState, 
   useEffect 
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   Menu, 
   X, 
@@ -20,6 +21,14 @@ import {
 } from 'lucide-react';
 
 const Navbar = () => {
+  const location = useLocation();
+  const isPostersPage = location.pathname === '/detalles-carteles';
+  const isJournalsPage = location.pathname === '/detalles-revistas';
+  const isBooksPage = location.pathname === '/detalles-libros';
+  const isLearningPage = location.pathname === '/detalles-aprendizaje';
+  const isIntellectualPropertyPage = location.pathname === '/detalles-propiedad-intelectual';
+  const isFormateoRapidoPage = location.pathname === '/detalles-formateo-rapido' || location.pathname === '/formateo-rapido';
+  const isSimplifiedMenu = isPostersPage || isJournalsPage || isBooksPage || isLearningPage || isIntellectualPropertyPage || isFormateoRapidoPage;
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -79,7 +88,7 @@ const Navbar = () => {
 
   const services = [
     { name: 'Revistas Indexadas', href: 'https://relaticpanama.org/_journals/', icon: Newspaper },
-    { name: 'Carteles Digitales', href: 'https://relaticpanama.org/_posters/', icon: FileText },
+    { name: 'Carteles Digitales', href: '/detalles-carteles', icon: FileText },
     { name: 'Libros Digitales', href: 'https://relaticpanama.org/_books/index.php/edrp/catalog', icon: BookOpen },
     { name: 'Aprendizaje Continuo', href: 'https://relaticpanama.org/_classroom/', icon: GraduationCap },
     { name: 'Propiedad Intelectual', href: 'https://relaticpanama.org/_protect/', icon: ShieldCheck }
@@ -111,9 +120,9 @@ const Navbar = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
+        <div className="flex items-center justify-between h-14 sm:h-16 overflow-visible">
           {/* Logo con diseño institucional limpio */}
-          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-shrink">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-shrink-0">
             <a href="#inicio" onClick={(e) => scrollToSection('inicio', e)} className="min-w-0 block flex items-center space-x-2 sm:space-x-3 cursor-pointer">
               <div className="relative flex-shrink-0">
                 <div className={`w-10 h-10 sm:w-12 sm:h-12 ${
@@ -141,11 +150,11 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation - Diseño limpio y profesional */}
-          <div className="hidden xl:flex items-center space-x-3 2xl:space-x-5">
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-2 2xl:space-x-3 flex-nowrap overflow-visible">
             <a 
               href="#inicio" 
               onClick={(e) => scrollToSection('inicio', e)}
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-xs lg:text-sm xl:text-base 2xl:text-base cursor-pointer whitespace-nowrap`}
               style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
             >
               Inicio
@@ -153,162 +162,172 @@ const Navbar = () => {
             </a>
 
             {/* Services Dropdown */}
-            <div className="relative">
-              <button
+            {!isSimplifiedMenu && (
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Si está en la página principal, hacer scroll, sino mostrar dropdown
+                    if (window.location.pathname === '/') {
+                      scrollToSection('servicios', e);
+                    } else {
+                      handleDropdown('services');
+                    }
+                  }}
+                  className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-xs lg:text-sm xl:text-base 2xl:text-base cursor-pointer whitespace-nowrap`}
+                  style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
+                >
+                  <span>Servicios</span>
+                  <ChevronDown className={`w-3 h-3 2xl:w-4 2xl:h-4 transition-transform duration-300 ${
+                    activeDropdown === 'services' ? 'rotate-180' : ''
+                  }`} />
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
+                </button>
+
+                {/* Services Dropdown Menu */}
+                {activeDropdown === 'services' && (
+                  <div className={`absolute top-full left-0 mt-2 w-56 xl:w-64 ${dropdownBg} border border-slate-200 rounded-lg overflow-hidden z-50 shadow-lg`}>
+                    <div className="p-2">
+                      {services.map((service) => {
+                        const IconComponent = service.icon;
+                        return (
+                          <a
+                            key={service.name}
+                            href={service.href}
+                            className={`flex items-center space-x-3 p-2 xl:p-3 rounded-md ${dropdownHoverBg} transition-all duration-300 group`}
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            <div className={`w-7 h-7 xl:w-8 xl:h-8 ${
+                              isScrolled ? 'bg-blue-50' : 'bg-slate-700'
+                            } rounded-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0`}>
+                              <IconComponent className={`w-3 h-3 xl:w-4 xl:h-4 ${
+                                isScrolled ? 'text-blue-600' : 'text-blue-200'
+                              }`} />
+                            </div>
+                            <span className={`${dropdownItemTextColor} ${dropdownItemHoverTextColor} transition-colors duration-300 font-medium text-sm xl:text-base`}>
+                              {service.name}
+                            </span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!isSimplifiedMenu && (
+              <a 
+                href="#nosotros" 
                 onClick={(e) => {
-                  e.stopPropagation();
-                  // Si está en la página principal, hacer scroll, sino mostrar dropdown
                   if (window.location.pathname === '/') {
-                    scrollToSection('servicios', e);
-                  } else {
-                    handleDropdown('services');
+                    scrollToSection('nosotros', e);
                   }
                 }}
-                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+                className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-xs lg:text-sm xl:text-base 2xl:text-base cursor-pointer whitespace-nowrap`}
                 style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
               >
-                <span>Servicios</span>
-                <ChevronDown className={`w-3 h-3 2xl:w-4 2xl:h-4 transition-transform duration-300 ${
-                  activeDropdown === 'services' ? 'rotate-180' : ''
-                }`} />
+                Nosotros
                 <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
-              </button>
-
-              {/* Services Dropdown Menu */}
-              {activeDropdown === 'services' && (
-                <div className={`absolute top-full left-0 mt-2 w-56 xl:w-64 ${dropdownBg} border border-slate-200 rounded-lg overflow-hidden z-50 shadow-lg`}>
-                  <div className="p-2">
-                    {services.map((service) => {
-                      const IconComponent = service.icon;
-                      return (
-                        <a
-                          key={service.name}
-                          href={service.href}
-                          className={`flex items-center space-x-3 p-2 xl:p-3 rounded-md ${dropdownHoverBg} transition-all duration-300 group`}
-                          onClick={() => setActiveDropdown(null)}
-                        >
-                          <div className={`w-7 h-7 xl:w-8 xl:h-8 ${
-                            isScrolled ? 'bg-blue-50' : 'bg-slate-700'
-                          } rounded-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0`}>
-                            <IconComponent className={`w-3 h-3 xl:w-4 xl:h-4 ${
-                              isScrolled ? 'text-blue-600' : 'text-blue-200'
-                            }`} />
-                          </div>
-                          <span className={`${dropdownItemTextColor} ${dropdownItemHoverTextColor} transition-colors duration-300 font-medium text-sm xl:text-base`}>
-                            {service.name}
-                          </span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <a 
-              href="#nosotros" 
-              onClick={(e) => {
-                if (window.location.pathname === '/') {
-                  scrollToSection('nosotros', e);
-                }
-              }}
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
-              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
-            >
-              Nosotros
-              <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
-            </a>
+              </a>
+            )}
 
             {/* Activities Dropdown */}
-            <div className="relative">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // Si está en la página principal, hacer scroll, sino mostrar dropdown
-                  if (window.location.pathname === '/') {
-                    scrollToSection('actividades', e);
-                  } else {
-                    handleDropdown('activities');
-                  }
-                }}
-                className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base cursor-pointer`}
+            {!isSimplifiedMenu && (
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Si está en la página principal, hacer scroll, sino mostrar dropdown
+                    if (window.location.pathname === '/') {
+                      scrollToSection('actividades', e);
+                    } else {
+                      handleDropdown('activities');
+                    }
+                  }}
+                  className={`flex items-center space-x-1 ${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-xs lg:text-sm xl:text-base 2xl:text-base cursor-pointer whitespace-nowrap`}
+                  style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
+                >
+                  <span>Actividades</span>
+                  <ChevronDown className={`w-3 h-3 2xl:w-4 2xl:h-4 transition-transform duration-300 ${
+                    activeDropdown === 'activities' ? 'rotate-180' : ''
+                  }`} />
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
+                </button>
+
+                {/* Activities Dropdown Menu */}
+                {activeDropdown === 'activities' && (
+                  <div className={`absolute top-full left-0 mt-2 w-56 xl:w-64 ${dropdownBg} border border-slate-200 rounded-lg overflow-hidden z-50 shadow-lg`}>
+                    <div className="p-2">
+                      {activities.map((activity) => {
+                        const IconComponent = activity.icon;
+                        return (
+                          <a
+                            key={activity.name}
+                            href={activity.href}
+                            className={`flex items-center space-x-3 p-2 xl:p-3 rounded-md ${dropdownHoverBg} transition-all duration-300 group`}
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            <div className={`w-7 h-7 xl:w-8 xl:h-8 ${
+                              isScrolled ? 'bg-blue-50' : 'bg-slate-700'
+                            } rounded-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0`}>
+                              <IconComponent className={`w-3 h-3 xl:w-4 xl:h-4 ${
+                                isScrolled ? 'text-blue-600' : 'text-blue-200'
+                              }`} />
+                            </div>
+                            <span className={`${dropdownItemTextColor} ${dropdownItemHoverTextColor} transition-colors duration-300 font-medium text-sm xl:text-base`}>
+                              {activity.name}
+                            </span>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!isSimplifiedMenu && (
+              <a 
+                href="https://relaticpanama.org/_blog/" 
+                className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-xs lg:text-sm xl:text-base 2xl:text-base whitespace-nowrap`}
                 style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
               >
-                <span>Actividades</span>
-                <ChevronDown className={`w-3 h-3 2xl:w-4 2xl:h-4 transition-transform duration-300 ${
-                  activeDropdown === 'activities' ? 'rotate-180' : ''
-                }`} />
+                Blog
                 <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
-              </button>
-
-              {/* Activities Dropdown Menu */}
-              {activeDropdown === 'activities' && (
-                <div className={`absolute top-full left-0 mt-2 w-56 xl:w-64 ${dropdownBg} border border-slate-200 rounded-lg overflow-hidden z-50 shadow-lg`}>
-                  <div className="p-2">
-                    {activities.map((activity) => {
-                      const IconComponent = activity.icon;
-                      return (
-                        <a
-                          key={activity.name}
-                          href={activity.href}
-                          className={`flex items-center space-x-3 p-2 xl:p-3 rounded-md ${dropdownHoverBg} transition-all duration-300 group`}
-                          onClick={() => setActiveDropdown(null)}
-                        >
-                          <div className={`w-7 h-7 xl:w-8 xl:h-8 ${
-                            isScrolled ? 'bg-blue-50' : 'bg-slate-700'
-                          } rounded-md flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0`}>
-                            <IconComponent className={`w-3 h-3 xl:w-4 xl:h-4 ${
-                              isScrolled ? 'text-blue-600' : 'text-blue-200'
-                            }`} />
-                          </div>
-                          <span className={`${dropdownItemTextColor} ${dropdownItemHoverTextColor} transition-colors duration-300 font-medium text-sm xl:text-base`}>
-                            {activity.name}
-                          </span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <a 
-              href="https://relaticpanama.org/_blog/" 
-              className={`${textColor} ${hoverTextColor} transition-all duration-300 font-semibold relative group text-sm 2xl:text-base`}
-              style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '0.01em' }}
-            >
-              Blog
-              <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full`} />
-            </a>
+              </a>
+            )}
 
             {/* Botón de Administración con icono de engranaje */}
-            <a
-              href="/panel-administracion"
-              className={`p-2 ${textColor} ${hoverTextColor} transition-all duration-300 rounded-lg hover:bg-slate-100/50`}
-              title="Administración"
-            >
-              <Settings className="w-5 h-5" />
-            </a>
+            {!isSimplifiedMenu && (
+              <a
+                href="/panel-administracion"
+                className={`p-2 ${textColor} ${hoverTextColor} transition-all duration-300 rounded-lg hover:bg-slate-100/50`}
+                title="Administración"
+              >
+                <Settings className="w-5 h-5" />
+              </a>
+            )}
 
             {/* Botón de Registrarse */}
             <a
-              href="http://localhost:9000/register"
-              className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold transition-colors duration-300"
+              href="https://miembros.relatic.org/register"
+              className="px-2 lg:px-3 xl:px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold transition-colors duration-300 text-xs lg:text-sm xl:text-base whitespace-nowrap"
             >
               Registrarse
             </a>
 
             {/* Botón de Iniciar Sesión */}
             <a
-              href="http://localhost:9000/login"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-300"
+              href="https://miembros.relatic.org/login"
+              className="px-2 lg:px-3 xl:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-300 text-xs lg:text-sm xl:text-base whitespace-nowrap"
             >
               Iniciar Sesión
             </a>
           </div>
 
-          {/* Tablet Navigation (lg to xl) */}
-          <div className="hidden lg:flex xl:hidden items-center space-x-2">
+          {/* Tablet Navigation (lg to xl) - Ahora integrado en Desktop */}
+          <div className="hidden">
             <a 
               href="#inicio" 
               onClick={(e) => scrollToSection('inicio', e)}
@@ -432,7 +451,7 @@ const Navbar = () => {
 
             {/* Botón de Registrarse para Tablet */}
             <a
-              href="http://localhost:9000/register"
+              href="https://miembros.relatic.org/register"
               className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold transition-colors duration-300"
             >
               Registrarse
@@ -440,7 +459,7 @@ const Navbar = () => {
 
             {/* Botón de Iniciar Sesión para Tablet */}
             <a
-              href="http://localhost:9000/login"
+              href="https://miembros.relatic.org/login"
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-300"
             >
               Iniciar Sesión
@@ -481,89 +500,99 @@ const Navbar = () => {
               </a>
 
               {/* Mobile Services */}
-              <div className="space-y-1 sm:space-y-2">
-                <div className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-xs sm:text-sm tracking-wider uppercase ${
-                  isScrolled ? 'text-blue-600' : 'text-blue-200'
-                }`}>
-                  Servicios
+              {!isSimplifiedMenu && (
+                <div className="space-y-1 sm:space-y-2">
+                  <div className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-xs sm:text-sm tracking-wider uppercase ${
+                    isScrolled ? 'text-blue-600' : 'text-blue-200'
+                  }`}>
+                    Servicios
+                  </div>
+                  {services.map((service) => {
+                    const IconComponent = service.icon;
+                    return (
+                      <a
+                        key={service.name}
+                        href={service.href}
+                        className={`flex items-center space-x-3 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 text-sm sm:text-base`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <IconComponent className={`w-4 h-4 ${
+                          isScrolled ? 'text-blue-600' : 'text-blue-200'
+                        } flex-shrink-0`} />
+                        <span>{service.name}</span>
+                      </a>
+                    );
+                  })}
                 </div>
-                {services.map((service) => {
-                  const IconComponent = service.icon;
-                  return (
-                    <a
-                      key={service.name}
-                      href={service.href}
-                      className={`flex items-center space-x-3 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 text-sm sm:text-base`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <IconComponent className={`w-4 h-4 ${
-                        isScrolled ? 'text-blue-600' : 'text-blue-200'
-                      } flex-shrink-0`} />
-                      <span>{service.name}</span>
-                    </a>
-                  );
-                })}
-              </div>
+              )}
 
-              <a 
-                href="#nosotros" 
-                onClick={(e) => {
-                  if (window.location.pathname === '/') {
-                    scrollToSection('nosotros', e);
-                  }
-                  setIsOpen(false);
-                }}
-                className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base cursor-pointer`}
-              >
-                Nosotros
-              </a>
+              {!isSimplifiedMenu && (
+                <a 
+                  href="#nosotros" 
+                  onClick={(e) => {
+                    if (window.location.pathname === '/') {
+                      scrollToSection('nosotros', e);
+                    }
+                    setIsOpen(false);
+                  }}
+                  className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base cursor-pointer`}
+                >
+                  Nosotros
+                </a>
+              )}
 
               {/* Mobile Activities */}
-              <div className="space-y-1 sm:space-y-2">
-                <div className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-xs sm:text-sm tracking-wider uppercase ${
-                  isScrolled ? 'text-blue-600' : 'text-blue-200'
-                }`}>
-                  Actividades
+              {!isSimplifiedMenu && (
+                <div className="space-y-1 sm:space-y-2">
+                  <div className={`px-3 py-1 sm:px-4 sm:py-2 font-semibold text-xs sm:text-sm tracking-wider uppercase ${
+                    isScrolled ? 'text-blue-600' : 'text-blue-200'
+                  }`}>
+                    Actividades
+                  </div>
+                  {activities.map((activity) => {
+                    const IconComponent = activity.icon;
+                    return (
+                      <a
+                        key={activity.name}
+                        href={activity.href}
+                        className={`flex items-center space-x-3 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 text-sm sm:text-base`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <IconComponent className={`w-4 h-4 ${
+                          isScrolled ? 'text-blue-600' : 'text-blue-200'
+                        } flex-shrink-0`} />
+                        <span>{activity.name}</span>
+                      </a>
+                    );
+                  })}
                 </div>
-                {activities.map((activity) => {
-                  const IconComponent = activity.icon;
-                  return (
-                    <a
-                      key={activity.name}
-                      href={activity.href}
-                      className={`flex items-center space-x-3 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 text-sm sm:text-base`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <IconComponent className={`w-4 h-4 ${
-                        isScrolled ? 'text-blue-600' : 'text-blue-200'
-                      } flex-shrink-0`} />
-                      <span>{activity.name}</span>
-                    </a>
-                  );
-                })}
-              </div>
+              )}
 
-              <a 
-                href="https://relaticpanama.org/_blog/" 
-                className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
-                onClick={() => setIsOpen(false)}
-              >
-                Blog
-              </a>
+              {!isSimplifiedMenu && (
+                <a 
+                  href="https://relaticpanama.org/_blog/" 
+                  className={`block px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Blog
+                </a>
+              )}
 
               {/* Botón de Administración con icono de engranaje Móvil */}
-              <a
-                href="/panel-administracion"
-                className={`flex items-center justify-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
-                onClick={() => setIsOpen(false)}
-              >
-                <Settings className="w-4 h-4" />
-                <span>Administración</span>
-              </a>
+              {!isSimplifiedMenu && (
+                <a
+                  href="/panel-administracion"
+                  className={`flex items-center justify-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 ${dropdownItemTextColor} ${dropdownHoverBg} rounded-md transition-all duration-300 font-medium text-sm sm:text-base`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Administración</span>
+                </a>
+              )}
 
               {/* Botón de Registrarse Móvil */}
               <a
-                href="http://localhost:9000/register"
+                href="https://miembros.relatic.org/register"
                 className="block w-full px-4 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-lg font-semibold text-center transition-colors duration-300"
                 onClick={() => setIsOpen(false)}
               >
@@ -572,7 +601,7 @@ const Navbar = () => {
 
               {/* Botón de Iniciar Sesión Móvil */}
               <a
-                href="http://localhost:9000/login"
+                href="https://miembros.relatic.org/login"
                 className="block w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold text-center transition-colors duration-300"
                 onClick={() => setIsOpen(false)}
               >

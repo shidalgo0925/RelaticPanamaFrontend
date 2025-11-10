@@ -338,7 +338,7 @@ const Footer = () => {
                 </a>
               </li>
               <li className="group">
-                <a href="https://relaticpanama.org/_posters/" className="flex items-center gap-2 hover:text-blue-200 transition-colors duration-300 footer-nav-item">
+                <a href="/detalles-carteles" className="flex items-center gap-2 hover:text-blue-200 transition-colors duration-300 footer-nav-item">
                   <FileText size={14} className="footer-nav-icon" />
                   <span className="relative">
                     Carteles Digitales

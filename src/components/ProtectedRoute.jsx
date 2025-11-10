@@ -2,11 +2,17 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import PropTypes from 'prop-types';
 
+/**
+ * Componente de ruta protegida que verifica autenticación y roles de usuario.
+ * 
+ * @param {Object} props - Propiedades del componente
+ * @param {React.ReactNode} props.children - Componentes hijos a renderizar si el acceso es permitido
+ * @param {string[]} props.allowedRoles - Array de roles permitidos para acceder a la ruta
+ * @returns {React.ReactElement} Componente hijo o redirección según autenticación/rol
+ */
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, user } = useAuth();
   const location = useLocation();
-
-  console.log('ProtectedRoute - User:', user, 'Authenticated:', isAuthenticated);
 
   // Si no está autenticado, lo redirigimos al login
   if (!isAuthenticated) {

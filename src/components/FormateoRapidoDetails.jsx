@@ -1,15 +1,15 @@
 import { CheckCircle } from 'lucide-react';
 import { renderStyledTitle } from './Carousel/carouselUtils.jsx';
 
-export default function BooksDetails() {
-  // Datos de la slide de Libros Digitales
+export default function FormateoRapidoDetails() {
+  // Datos de la slide de Herramientas de Apoyo para Investigación
   const slide = {
     id: 1,
-    title: "Libros Digitales",
-    subtitle: "Publica y difunde tus libros",
-    description: "Accede a una plataforma digital para la publicación de libros y documentos académicos con alcance global.",
-    bgImage: "https://images.pexels.com/photos/8199596/pexels-photo-8199596.jpeg",
-    bullets: ["Publicación sin costo", "ISBN y DOI disponibles", "Distribución digital global"]
+    title: "HERRAMIENTAS DE APOYO PARA INVESTIGACIÓN",
+    subtitle: "Apoyo en investigación y redacción científica",
+    description: "Accede a asesoría especializada y recursos para todas las etapas del proceso científico, desde la formulación de preguntas hasta la publicación de manuscritos académicos.",
+    bgImage: "https://images.pexels.com/photos/3143813/pexels-photo-3143813.jpeg",
+    bullets: ["Asesoría especializada", "Recursos didácticos", "Herramientas prácticas"]
   };
 
   return (
@@ -79,3 +79,4 @@ export default function BooksDetails() {
     </div>
   );
 }
+
