@@ -11,13 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="preload" href="/logo.png" as="image">
     <link rel="icon" href="/logo.png" />
+    <!-- Mini-chat propio (Relatic) - comentado antes de dar de baja
     <link rel="stylesheet" href="/css/chatbot.css" />
+    -->
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- Mini chat flotante -->
+    <!-- Mini-chat propio (Relatic) - comentado antes de dar de baja
     <div id="mini-chat" class="hidden">
       <div id="mini-chat-header">
         Asistente Virtual Relatic
@@ -29,35 +31,30 @@
           <div class="welcome-title">¡Hola! Soy tu asistente virtual</div>
           <div class="welcome-subtitle">Ingresa tu número de cédula para consultar tus documentos disponibles (certificados, carnets y cartas de aceptación).</div>
         </div>
-        
         <div class="section-title">Servicios Disponibles</div>
         <div class="buttons-container">
           <button class="chat-button certificados" onclick="handleChat('GuiaPasos')">
             Si quieres tener acceso al historial completo de tus documentos, explora los siguientes pasos
           </button>
         </div>
-        
-        <!-- Área de input para escribir mensajes -->
         <div id="chat-input-container">
           <label class="input-label">Ingresa tu número de cédula:</label>
           <div class="input-wrapper">
-            <input 
-              type="text" 
-              id="chat-input" 
-              placeholder="Ej: 8-123-456 o 12345678" 
-              onkeypress="handleKeyPress(event)"
-            />
-            <button id="chat-send-btn" onclick="sendMessage()" title="Buscar documentos">
-              ➤
-            </button>
+            <input type="text" id="chat-input" placeholder="Ej: 8-123-456 o 12345678" onkeypress="handleKeyPress(event)" />
+            <button id="chat-send-btn" onclick="sendMessage()" title="Buscar documentos">➤</button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Botón flotante para mostrar el chat cuando esté oculto -->
     <button id="show-chat-btn" class="visible" onclick="showChat()">💬</button>
-
     <script src="/js/chatbot.js"></script>
+    -->
+
+    <!-- Widget WAConnect (motor chatbot Realtic Panamá) -->
+    <script
+      src="https://waconnect.site/static/js/chat.js"
+      data-company="realticpanama"
+      data-base-url="https://waconnect.site">
+    </script>
   </body>
 </html>
