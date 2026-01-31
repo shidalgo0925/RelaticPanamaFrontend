@@ -190,19 +190,6 @@ const Unauthorized = () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
           >
-            {/* Botón para volver al inicio */}
-            <button
-              onClick={handleGoHome}
-              className="group relative w-full px-6 py-3 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-lg hover:shadow-xl transform hover:scale-105 overflow-hidden"
-              aria-label="Volver a la página principal"
-            >
-              <div className="flex items-center justify-center space-x-2 relative z-10">
-                <Home className="w-4 h-4" />
-                <span>Volver al inicio</span>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </button>
-
             {/* Botón para cerrar sesión */}
             <button
               onClick={handleLogout}

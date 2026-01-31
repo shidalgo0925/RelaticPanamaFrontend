@@ -6,7 +6,10 @@
     <meta name="description" content="Ciencia Tecnología e Innovación" />
     <meta name="author" content="Relatic Panamá" />
     <title>Relatic Panamá | Ciencia, Tecnología e Innovación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="/logo.png" as="image">
     <link rel="icon" href="/logo.png" />
     <style>
       /* Estilos del mini chat flotante - Diseño profesional e institucional */
@@ -295,12 +298,6 @@
         background: #fafbff;
       }
 
-      #chat-input::-moz-placeholder {
-        color: #94a3b8;
-        font-style: normal;
-        font-weight: 400;
-      }
-
       #chat-input::placeholder {
         color: #94a3b8;
         font-style: normal;
@@ -446,7 +443,7 @@
         }
       }
 
-      #mini-chat {
+      #mini-chat:not(.hidden) {
         animation: slideInFromBottom 0.5s ease-out;
       }
 
@@ -556,18 +553,13 @@
         font-size: 14px;
       }
     </style>
-    <script type="module" crossorigin src="/assets/index-49iEk-fq.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/Agreements-BLUdG5sy.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor_react-BD08pjg8.js">
-    <link rel="modulepreload" crossorigin href="/assets/SearchPage-BDTiKmNb.js">
-    <link rel="stylesheet" crossorigin href="/assets/Agreements-DvB2Xm2x.css">
-    <link rel="stylesheet" crossorigin href="/assets/index-9rctmv2u.css">
   </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
 
     <!-- Mini chat flotante -->
-    <div id="mini-chat">
+    <div id="mini-chat" class="hidden">
       <div id="mini-chat-header">
         Asistente Virtual Relatic
         <div class="status-text">En línea</div>
@@ -605,7 +597,7 @@
     </div>
 
     <!-- Botón flotante para mostrar el chat cuando esté oculto -->
-    <button id="show-chat-btn" onclick="showChat()">💬</button>
+    <button id="show-chat-btn" class="visible" onclick="showChat()">💬</button>
 
     <script>
       // Variables globales para el manejo del chat

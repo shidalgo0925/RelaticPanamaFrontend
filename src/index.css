@@ -74,3 +74,27 @@ section[id] {
     animation: zoom-in 1s ease-in-out;
   }
 }
+
+/* Sidebar Scrollbar Styling */
+aside::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: rgba(147, 51, 234, 0.3);
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: rgba(107, 33, 168, 0.8);
+  border-radius: 3px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 33, 168, 1);
+}
+
+/* Firefox scrollbar */
+aside {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107, 33, 168, 0.8) rgba(147, 51, 234, 0.3);
+}

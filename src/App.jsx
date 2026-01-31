@@ -22,13 +22,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Estos componentes son necesarios para el renderizado inicial
 import Navbar from './components/Navbar';
 import Carousel from './components/Carousel/Carousel';
+import ServiciosPage from './components/ServiciosPage';
 
 // Lazy imports para componentes secundarios
 // Estos componentes se cargan bajo demanda para mejorar el rendimiento inicial
 const Footer = lazy(() => import('./components/Footer'));
 const AboutUs = lazy(() => import('./components/AboutUs'));
 const Agreements = lazy(() => import('./components/Agreements'));
-const RedirectToHomeButton = lazy(() => import('./components/RedirectToHomeButton'));
 const ServicesGrid = lazy(() => import('./components/ServicesGrid'));
 const MembershipBenefits = lazy(() => import('./components/MembershipBenefits'));
 const UpcomingActivities = lazy(() => import('./components/UpcomingActivities'));
@@ -67,6 +67,8 @@ const PostersFeatures = lazy(() => import('./components/PostersFeatures'));
 const BooksFeatures = lazy(() => import('./components/BooksFeatures'));
 const IntellectualPropertyFeatures = lazy(() => import('./components/IntellectualPropertyFeatures'));
 const FormateoRapidoFeatures = lazy(() => import('./components/FormateoRapidoFeatures'));
+const DashboardLayout = lazy(() => import('./components/DashboardLayout'));
+const EasyTechDashboard = lazy(() => import('./components/EasyTechDashboard'));
 
 /**
  * Componente de loading optimizado que se muestra mientras se cargan componentes lazy.
@@ -81,20 +83,20 @@ const LoadingFallback = () => (
 );
 
 /**
- * Layout para páginas secundarias que incluye botón de regreso al inicio.
- * 
- * @param {Object} props - Propiedades del componente
- * @param {React.ReactNode} props.children - Contenido de la página
+ * Layout para páginas secundarias: Navbar, contenido, Footer (sin botón de regreso).
  */
 const PageLayout = ({ children }) => (
-  <Suspense fallback={<LoadingFallback />}>
-    <main className="flex flex-col min-h-screen container mx-auto px-4 py-10">
-      <div className="flex justify-start mb-6">
-        <RedirectToHomeButton />
-      </div>
-      {children}
-    </main>
-  </Suspense>
+  <>
+    <Navbar />
+    <Suspense fallback={<LoadingFallback />}>
+      <main className="flex flex-col min-h-screen container mx-auto px-4 py-10">
+        {children}
+      </main>
+    </Suspense>
+    <Suspense fallback={null}>
+      <Footer />
+    </Suspense>
+  </>
 );
 
 /**
@@ -107,7 +109,7 @@ const PageLayoutNoButton = ({ children }) => (
   <>
     <Navbar />
     <Suspense fallback={<LoadingFallback />}>
-      <main className="flex flex-col min-h-screen container mx-auto px-4 py-10">
+      <main className="flex flex-col min-h-screen container mx-auto px-4 pt-20 pb-10">
         {children}
       </main>
     </Suspense>
@@ -165,37 +167,10 @@ const HomeLayout = () => (
       <Carousel />
     </section>
     
-    {/* Componentes secundarios - carga progresiva */}
-    <section id="servicios">
-      <Suspense fallback={<div className="py-16"><div className="text-center"><div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div></div>}>
-        <ServicesGrid />
-      </Suspense>
-    </section>
-    
-    <section id="beneficios">
-      <Suspense fallback={<div className="py-16"><div className="text-center"><div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div></div>}>
-        <MembershipBenefits />
-      </Suspense>
-    </section>
-    
     <section id="busqueda">
       <Suspense fallback={<div className="py-16"><div className="text-center"><div className="inline-block w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div></div></div>}>
         <div className="container mx-auto px-4 py-10">
           <SearchPage />
-        </div>
-      </Suspense>
-    </section>
-    
-    <section id="nosotros">
-      <Suspense fallback={null}>
-        <AboutUs />
-      </Suspense>
-    </section>
-    
-    <section id="actividades">
-      <Suspense fallback={null}>
-        <div className="container mx-auto px-4 py-10">
-          <UpcomingActivities />
         </div>
       </Suspense>
     </section>
@@ -466,12 +441,13 @@ ProtectedPageLayout.propTypes = {
  * Configura el router, el proveedor de autenticación y todas las rutas.
  */
 const App = () => (
-  <Router>
+  <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <AuthProvider>
       <Routes>
         {/* ========== RUTAS PÚBLICAS ========== */}
         {/* Estas rutas son accesibles sin autenticación */}
         <Route path="/" element={<HomeLayout />} />
+        <Route path="/servicios" element={<PageLayoutNoButton><ServiciosPage /></PageLayoutNoButton>} />
         <Route path="/unauthorized" element={<PageLayout><Unauthorized /></PageLayout>} />
         <Route path="/terminos-condiciones" element={<PageLayout><TermsAndConditions /></PageLayout>} />
         <Route path="/nosotros" element={<PageLayout><AboutUs /></PageLayout>} />
@@ -489,6 +465,13 @@ const App = () => (
         <Route path="/detalles-formateo-rapido" element={<FormateoRapidoPageLayout />} />
         <Route path="/panel-administracion" element={<PageLayout><AdminPanel /></PageLayout>} />
         <Route path="/guia-paso-a-paso" element={<PageLayout><StepByStepGuide /></PageLayout>} />
+        <Route path="/dashboard" element={
+          <Suspense fallback={<LoadingFallback />}>
+            <DashboardLayout>
+              <EasyTechDashboard />
+            </DashboardLayout>
+          </Suspense>
+        } />
         
         {/* ========== RUTAS PROTEGIDAS ========== */}
         {/* Estas rutas requieren autenticación y roles específicos */}

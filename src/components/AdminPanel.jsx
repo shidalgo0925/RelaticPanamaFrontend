@@ -204,16 +204,7 @@ const AdminPanel = () => {
               </div>
             </div>
 
-            <div className="text-center">
-              <button
-                onClick={() => navigate('/')}
-                className="inline-flex items-center space-x-2 text-gray-500 hover:text-gray-700 text-sm font-medium transition-colors"
-              >
-                <Home className="w-4 h-4" />
-                <span>Volver a la página Principal</span>
-              </button>
-            </div>
-          </motion.div>
+            </motion.div>
 
           <motion.div
             initial="hidden"
